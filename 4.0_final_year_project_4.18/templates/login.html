@@ -1,0 +1,9 @@
+<h2>gettext('用户登录')</h2>
+<form method="post">
+    _('用户名')：<input type="text" name="username" required><br>
+    _('密码')：<input type="password" name="password" required><br>
+    <input type="submit" value="登录">
+    <p><a href="{{ url_for('forgot_password') }}">_('忘记密码？')</a></p>
+    <p><a href="{{ url_for('admin_log') }}">_('管理员登录')</a></p>
+</form>
+

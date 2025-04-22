@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>管理员控制台</title>
+</head>
+<body>
+    <h2>管理员控制台</h2>
+
+    <p><a href="{{ url_for('admin_notifications') }}">
+        📢 进入系统通知发布</a></p>
+
+    <p><a href="{{ url_for('admin_feedback') }}">
+        💬 查看用户反馈</a></p>
+
+    <p><a href="{{ url_for('send_tracking_emails') }}">
+           跟踪启动</a></p>
+
+    <p><a href="{{ url_for('home') }}">🏠 返回用户首页</a></p>
+</body>
+</html>

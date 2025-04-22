@@ -1,0 +1,21 @@
+<h2>发布系统通知</h2>
+<form method="POST">
+    <label>标题：</label><br>
+    <input type="text" name="title" required><br><br>
+
+    <label>内容：</label><br>
+    <textarea name="content" rows="4" cols="60" required></textarea><br><br>
+
+    <button type="submit">发布</button>
+</form>
+
+<hr>
+<h3>历史通知</h3>
+<ul>
+    {% for n in notifications %}
+        <li>
+            <strong>{{ n.title }}</strong>（{{ n.created_at.strftime('%Y-%m-%d %H:%M') }}）<br>
+            {{ n.content }}
+        </li>
+    {% endfor %}
+</ul>

@@ -1,0 +1,9 @@
+<h2>系统通知</h2>
+<ul>
+    {% for n in notifications %}
+        <li style="margin-bottom:20px;">
+            <strong>{{ n.title }}</strong> （{{ n.created_at.strftime('%Y-%m-%d %H:%M') }}）<br>
+            {{ n.content }}
+        </li>
+    {% endfor %}
+</ul>
