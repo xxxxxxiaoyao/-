@@ -1,8 +1,0 @@
-<h2>开发者后台 - 用户反馈列表</h2>
-
-{% for fb in feedbacks %}
-    <div style="border:1px solid #aaa; padding:10px; margin-bottom:10px;">
-        <p><strong>用户 {{ fb.user_id }}</strong> 于 {{ fb.submitted_at.strftime('%Y-%m-%d %H:%M') }} 提交：</p>
-        <p>{{ fb.content }}</p>
-    </div>
-{% endfor %}
