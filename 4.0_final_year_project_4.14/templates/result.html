@@ -1,0 +1,10 @@
+<h2>评估结果</h2>
+<ul>
+    {% for dim, score in scores.items() %}
+        <li>{{ dim }}：{{ score }} 分</li>
+    {% endfor %}
+</ul>
+
+<h3>综合得分：{{ total_score }} 分</h3>
+
+<a href="/">返回首页</a>
