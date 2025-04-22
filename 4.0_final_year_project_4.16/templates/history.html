@@ -1,0 +1,24 @@
+<h2>我的测评历史</h2>
+<table border="1">
+    <tr>
+        <th>responseid</th>
+        <th>questionID</th>
+        <th>optionID</th>
+        <th>r_time</th>
+    </tr>
+    {% for r in records %}
+    <tr>
+        <td>{{ r.responseid }}</td>
+        <td>{{ r.questionID }}</td>
+        <td>{{ r.optionID }}</td>
+        <td>{{ "%.2f"|format(r.r_time) }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+
+
+
+<p><a href="{{ url_for('home') }}">返回首页</a></p>
