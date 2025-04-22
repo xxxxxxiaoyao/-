@@ -1,0 +1,14 @@
+<h2>个人信息</h2>
+
+<ul>
+    <li><strong>用户id：</strong>{{ user.id or "未填写" }}</li>
+    <li><strong>用户名：</strong>{{ user.username }}</li>
+    <li><strong>注册时间：</strong>{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else "暂无记录" }}</li>
+    <li><strong>邮箱：</strong>{{ user.email or "未填写" }}</li>
+    <li><strong>年龄：</strong>{{ user.age or "未填写" }}</li>
+    <li><strong>教育水平：</strong>{{ user.education_level or "未填写" }}</li>
+
+    
+</ul>
+
+<a href="{{ url_for('home') }}">返回首页</a> 
