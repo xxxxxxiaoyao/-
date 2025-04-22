@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户反馈管理</title>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题样式 */
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        /* 反馈列表样式 */
+        .feedback-list {
+            margin-top: 20px;
+        }
+
+        .feedback-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #3498db;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .feedback-user {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .feedback-time {
+            color: #7f8c8d;
+        }
+
+        .feedback-content {
+            padding: 10px 0;
+            line-height: 1.5;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-top: 30px;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .feedback-header {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>用户反馈管理</h2>
+        
+        <div class="feedback-list">
+            {% for fb in feedbacks %}
+            <div class="feedback-item">
+                <div class="feedback-header">
+                    <span class="feedback-user">用户ID: {{ fb.user_id }}</span>
+                    <span class="feedback-time">提交时间: {{ fb.submitted_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                </div>
+                <div class="feedback-content">
+                    {{ fb.content }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('admin') }}" class="back-button">返回管理控制台</a>
+    </div>
+</body>
+</html>

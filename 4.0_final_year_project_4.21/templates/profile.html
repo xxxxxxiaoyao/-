@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') }}">
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题样式 */
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        /* 信息列表样式 */
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #2c3e50;
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            color: #666;
+            flex-grow: 1;
+        }
+
+        /* 按钮容器样式 */
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+
+        /* 按钮样式 */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .primary-button {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .secondary-button {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .info-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .info-label {
+                margin-bottom: 5px;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>个人信息</h2>
+
+        <ul class="info-list">
+            <li class="info-item">
+                <span class="info-label">用户ID</span>
+                <span class="info-value">{{ user.id or "未填写" }}</span>
+            </li>
+            <li class="info-item">
+                <span class="info-label">用户名</span>
+                <span class="info-value">{{ user.username }}</span>
+            </li>
+            <li class="info-item">
+                <span class="info-label">注册时间</span>
+                <span class="info-value">{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else "暂无记录" }}</span>
+            </li>
+            <li class="info-item">
+                <span class="info-label">邮箱</span>
+                <span class="info-value">{{ user.email or "未填写" }}</span>
+            </li>
+            <li class="info-item">
+                <span class="info-label">年龄</span>
+                <span class="info-value">{{ user.age or "未填写" }}</span>
+            </li>
+            <li class="info-item">
+                <span class="info-label">教育水平</span>
+                <span class="info-value">{{ user.education_level or "未填写" }}</span>
+            </li>
+        </ul>
+
+        <div class="button-container">
+            <a href="{{ url_for('change_password') }}" class="button primary-button">修改密码</a>
+            <a href="{{ url_for('home') }}" class="button secondary-button">返回首页</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/background.js') }}"></script>
+</body>
+</html>

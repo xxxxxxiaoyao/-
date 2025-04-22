@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评估结果</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题样式 */
+        h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin-top: 30px;
+        }
+
+        /* 分数列表样式 */
+        .scores-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .score-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+
+        /* 总分样式 */
+        .total-score {
+            text-align: center;
+            font-size: 24px;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+            color: #2c3e50;
+        }
+
+        /* 图表容器样式 */
+        .chart-container {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 分析建议样式 */
+        .analysis-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .analysis-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .analysis-item strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-top: 30px;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .scores-list {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>评估结果</h2>
+
+        <ul class="scores-list">
+            {% for dim, score in scores.items() %}
+                <li class="score-item">
+                    <strong>{{ dim }}</strong>
+                    <div>{{ score }} 分</div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="total-score">
+            <strong>综合得分：</strong>{{ total_score }} 分
+        </div>
+
+        <h3>本次测评每题得分趋势图</h3>
+        <div class="chart-container">
+            <canvas id="perQuestionChart"></canvas>
+        </div>
+
+        <h3>维度分析与建议</h3>
+        <ul class="analysis-list">
+            {% for r in reason_output %}
+                <li class="analysis-item">
+                    <strong>{{ r.dimension }}</strong>
+                    {{ r.reason }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <a href="/" class="back-button">返回首页</a>
+    </div>
+
+    <script>
+        const labels = {{ question_scores | map(attribute='question_id') | list | tojson }}; 
+        const data = {{ question_scores | map(attribute='score') | list | tojson }};
+    //通过Jinja2模板引擎将数据传递给JavaScript。question_scores是一个包含每个问题得分的列表
+    //map（attribute='question_id'）用于提取每个问题的ID，map（attribute='score'）用于提取每个问题的得分
+    //tojson用于将Python对象转换为JSON格式，以便在JavaScript中使用
+    //labels和data分别存储问题ID和对应的得分，前者是x轴，后者是y轴
+
+        const ctx = document.getElementById('perQuestionChart').getContext('2d');
+            //创建chart.js图表
+        const chart = new Chart(ctx, {
+            type: 'line', //指定图表类型为折线图
+            //设计图表的属性
+            data: { 
+                labels: labels,//x轴标签
+                //y轴数据集
+                datasets: [{ 
+                    label: '每题得分', //数据集名称
+                    data: data, //y轴数据
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)', //线条颜色
+                    fill: true, //是否填充折线下方区域
+                    tension: 0.3, //折线的平滑程度
+                    pointRadius: 4, //数据点的半径
+                    pointBackgroundColor: '#3498db'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, //图表会根据容器大小自动调整
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true, //y轴从0开始
+                        suggestedMax: 5,  //y轴的最大值建议为5
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+        <script src="{{ url_for('static', filename='js/background.js') }}"></script>
+    </body>
+    </html>

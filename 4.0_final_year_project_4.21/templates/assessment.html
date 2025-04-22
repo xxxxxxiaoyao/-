@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英国留学适应能力评估</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/background.css') }}">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css">
+    <!-- 引入脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
+    <style>
+        /* 基础样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 容器样式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 标题样式 */
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        /* 问题样式 */
+        .question {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+
+        .question p {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        /* 选项样式 */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .option-label:hover {
+            background-color: #e9ecef;
+        }
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        /* 分隔线样式 */
+        hr {
+            border: none;
+            border-top: 1px solid #dee2e6;
+            margin: 20px 0;
+        }
+
+        /* 提交按钮样式 */
+        button[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 30px auto;
+            width: 200px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+
+            .question {
+                padding: 15px;
+            }
+
+            button[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>英国留学适应能力评估</h2>
+        <form method="POST" action="/submit_survey">
+            {% for question in questions %}
+            <div class="question">
+                <p><strong>{{ loop.index }}. {{ question.content }}</strong></p>
+                <div class="options">
+                    {% for option in question.options %}
+                    <label class="option-label">
+                        <input type="radio" name="{{ question.id }}" value="{{ option[0] }}" score="{{ option[1] }}" required>
+                        {{ option[1] }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit" data-intro="全部答完后点击这里提交。" data-step="1">提交评估</button>
+        </form>
+    </div>
+
+    <script>
+        window.onload = function () {
+            // 直接启动引导，不使用 localStorage 检查
+            introJs().setOptions({
+                nextLabel: '下一步',
+                prevLabel: '上一步',
+                doneLabel: '我知道了'
+            }).start();
+        };
+    </script>
+        <script src="{{ url_for('static', filename='js/background.js') }}"></script>
+    </body>
+    </html>
