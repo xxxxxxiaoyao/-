@@ -1,0 +1,67 @@
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<h2>评估结果</h2>
+
+
+<ul>
+    {% for dim, score in scores.items() %}
+        <li>{{ dim }}：{{ score }} 分</li>
+    {% endfor %}
+</ul>
+
+<h3>综合得分：{{ total_score }} 分</h3>
+
+<h3>本次测评每题得分趋势图</h3>
+<canvas id="perQuestionChart" width="700" height="300"></canvas>
+<script>
+    const labels = {{ question_scores | map(attribute='question_id') | list | tojson }}; 
+    const data = {{ question_scores | map(attribute='score') | list | tojson }};
+    //通过Jinja2模板引擎将数据传递给JavaScript。question_scores是一个包含每个问题得分的列表
+    //map（attribute='question_id'）用于提取每个问题的ID，map（attribute='score'）用于提取每个问题的得分
+    //tojson用于将Python对象转换为JSON格式，以便在JavaScript中使用
+    //labels和data分别存储问题ID和对应的得分，前者是x轴，后者是y轴
+
+    const ctx = document.getElementById('perQuestionChart').getContext('2d'); //获取canvas元素的上下文
+    //创建chart.js图表
+    const chart = new Chart(ctx, {
+        type: 'line', //指定图表类型为折线图
+        //设计图表的属性
+        data: { 
+            labels: labels, //x轴标签
+            //y轴数据集
+            datasets: [{ 
+                label: '每题得分', //数据集名称
+                data: data, //y轴数据
+                borderColor: 'rgba(255, 99, 132, 1)', //线条颜色
+                fill: false, //是否填充折线下方区域
+                tension: 0.3, //折线的平滑程度
+                pointRadius: 4 //数据点的半径
+            }]
+        },
+        //设计图表的配置
+        options: {
+            responsive: true, //图表会根据容器大小自动调整
+            scales: {
+                y: {
+                    beginAtZero: true, //y轴从0开始
+                    suggestedMax: 5 //y轴的最大值建议为5
+                }
+            }
+        }
+    });
+</script>
+
+<h3>维度分析与建议：</h3>
+<ul>
+    {% for r in reason_output %}
+        <li><strong>{{ r.dimension }}：</strong>{{ r.reason }}</li>
+    {% endfor %}
+</ul>
+
+
+
+
+
+<a href="/">返回首页</a>
